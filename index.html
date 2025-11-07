@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Евгений Барский</title>
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    .accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 24px;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  background: #f9f9fb;
+}
+
+.accordion-card.active .accordion-content {
+  max-height: 500px;   /* Больше места под текст */
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+    :root {
+      --bg: #f5f5f7;
+      --text: #1d1d1f;
+      --accent: #0071e3;
+      --light-gray: #d2d2d7;
+      --border: rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 100px 20px 60px;
+    }
+
+    .name {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #0071e3, #5ac8fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 24px;
+      font-weight: 400;
+      color: #6e6e73;
+      margin-bottom: 48px;
+    }
+
+    /* Navigation */
+    nav {
+      margin-bottom: 80px;
+      text-align: center;
+    }
+
+    nav a {
+      display: inline-block;
+      margin: 0 20px;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      text-decoration: none;
+      padding: 8px 0;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    /* Sections */
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    h2 {
+      font-size: 40px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 48px;
+      color: var(--text);
+    }
+
+    /* About */
+    .about-content {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 18px;
+      line-height: 1.8;
+      color: #3a3a3c;
+      text-align: center;
+    }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .price-card {
+      background: white;
+      border-radius: 18px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .price-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .service-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 8px 0;
+    }
+
+    .description {
+      font-size: 15px;
+      color: #6e6e73;
+      margin-top: 12px;
+    }
+
+    /* Contacts */
+    .contacts {
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .contacts a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contacts a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-item {
+      margin: 16px 0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: #86868b;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .name { font-size: 42px; }
+      .tagline { font-size: 20px; }
+      nav a { margin: 0 12px; font-size: 16px; }
+      h2 { font-size: 32px; }
+    }
+    /* Аккордеон */
+    .pricing-accordion {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .accordion-card:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion-header {
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .accordion-header .service-name {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .accordion-header .price-summary {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .accordion-toggle {
+      font-size: 20px;
+      transition: transform 0.3s ease;
+      color: #86868b;
+    }
+
+    .accordion-card.active .accordion-toggle {
+      transform: rotate(180deg);
+    }
+
+    /* Аккордеон */
+    .pricing-accordion {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .accordion-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .accordion-card:hover {
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion-header {
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      gap: 16px;
+    }
+
+    .accordion-header .service-name {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .accordion-header .price-summary { 
+      font-size: 20px;
+    }
+
+    .accordion-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .accordion-content li {
+      margin: 8px 0;
+    }
+
+    .accordion-content p {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #6e6e73;
+      font-style: italic;
+    }
+
+    .accordion-card.active .accordion-content {
+      max-height: 300px;
+      padding: 20px 24px;
+    }
+
+    .accordion-content ul {
+      margin: 12px 0;
+      padding-left: 20px;
+    }
+
+    .accordion-content li {
+      margin: 8px 0;
+    }
+
+    .accordion-content p {
+      margin-top: 16px;
+      font-size: 14px;
+      color: #6e6e73;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1 class="name">
+  <span class="red">А</span>ква<span class="red">С</span>ервис<span class="red">С</span>ургут
+</h1>
+      <p class="tagline">Домашний Сантехник • +7 982 880 46 78</p>
+    </header>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="#about">О себе</a>
+      <a href="#pricing">Услуги и Прайс</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+
+    <!-- About -->
+    <section id="about">
+      <h2>О себе</h2>
+      <div class="about-content">
+        Здравствуйте!
+Меня зовут Евгений
+Я профессиональный сантехник с многолетним опытом в данной сфере, со мной работают такие же профессионалы за плечами у которых огромный стаж работы как в управляющих компаниях так и в сфере капитального ремонта многоквартирных домов в сантехнической сфере.
+Мы оказываем добросовестные услуги, за которые нам не будет стыдно, делаем как для себя
+Работа производится с заключением договоров и предоставлением гарантий на работу!
+Оказываем помощь в закупке материала по нашим корпоративным скидкам!
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <!-- Pricing -->
+<!-- Pricing -->
+<section id="pricing">
+  <h2>Прайс под услуги</h2>
+  <div class="pricing-accordion">
+    
+    <!-- Карточка 1 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Унитазы</div>
+        <div class="price-summary">от 1200 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Демонтаж унитаза</strong> — 1200 ₽ шт</li>
+          <li><strong>Замена гофры на унитазе (без демонтажа унитаза)</strong> — 1500 ₽ шт</li>
+          <li><strong>Замена арматуры в бачке унитаза</strong> — 2200 ₽ шт</li>
+          <li><strong>Замена сливного бачка унитаза</strong> — 2500 ₽ шт</li>
+          <li><strong>Установка чаши подвесного унитаза</strong> — 3000 ₽ шт</li>
+          <li><strong>Установка напольного унитаза, биде</strong> — 3800 ₽ шт</li>
+          <li><strong>Установка писсуара</strong> — 4000 ₽ шт</li>
+          <li><strong> Установка инсталяции (без чаши унитаза)</strong> — 5000 ₽ шт</li>
+        </ul>
+        <p><em></em></p>
+      </div>
+    </div>
+
+    <!-- Карточка 2 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Ванны</div>
+        <div class="price-summary">от 750 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Гидроизоляция швов ванны, раковины герметиком</strong> — 750 ₽ м.п</li>
+          <li><strong>Монтаж пластикового экрана под ванну</strong> — 1500 ₽ шт</li>
+          <li><strong>Демонтаж акриловой, стальной ванны</strong> — 1500 ₽ шт</li>
+          <li><strong>Установка обвязки ванны</strong> — 2000 ₽ шт</li>
+          <li><strong>Демонтаж экрана ванны (кирпич, плитка)</strong> — 2000 ₽ шт</li>
+          <li><strong>Демонтаж чугунной ванны</strong> — 3000 ₽ шт</li>
+          <li><strong>Монтаж шторок на ванну (пластик)</strong> — 3500 ₽ шт</li>
+          <li><strong>Установка ванны (стальной)</strong> — 4500 ₽ шт</li>
+          <li><strong>Установка ванны (акриловой)</strong> — 6000 ₽ шт</li>
+          <li><strong>Установка ванны (чугунной) </strong> — 7000 ₽ шт</li>
+          <li><strong>Установка ванны с гидромассажем</strong> — 10000 ₽ шт</li>
+          <li><strong>Установка ванны-джакузи нестандартных размеров</strong> — от 10000 ₽ шт</li>
+          <li><strong>Монтаж шторок на ванну (стекло)</strong> — 5000 ₽ шт</li>
+          <li><strong>Установка акрилового поддона с подключением к канализации</strong> — 5000 ₽ шт</li>
+          <li><strong>Сборка и установка душевой кабины</strong> — 30% от стоимости</li>
+          <li><strong>Сборка и установка душевой кабины с гидромассажем</strong> — 30% от стоимости</li>
+        </ul>
+        <p><em></em></p>
+      </div>
+    </div>
+
+    <!-- Карточка 3 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Раковины</div>
+        <div class="price-summary">от 2000 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Монтаж зеркала в ванной</strong> — 2000 ₽ шт</li>
+          <li><strong>Вырезание отверстия под кухонную мойку</strong> — 2000 ₽ шт</li>
+          <li><strong>Монтаж зеркального шкафчика в ванной</strong> — 2500 ₽ шт</li>
+          <li><strong>Монтаж кухонной мойки с подключением к канализации (без учета вырезания отверстия)</strong> — 3100 ₽ шт</li>
+          <li><strong>Установка раковины с пьедесталом</strong> — 3200 ₽ шт</li>
+          <li><strong>Монтаж подвесной раковины</strong> — 4500 ₽ шт</li>
+          <li><strong>Установка раковины на шкафчике со сборкой</strong> — 7000 ₽ шт</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Карточка 4 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Сместители и шаровые краны</div>
+        <div class="price-summary">от 500 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Демонтаж сместителя</strong> — 500 ₽ шт</li>
+          <li><strong>Замена гибкой подводки</strong> — 1000 ₽ шт</li>
+          <li><strong>Монтаж простого сместителя на гибкой подводке</strong> — 1500 ₽ шт</li>
+          <li><strong>Монтаж счетчика воды</strong> — 2000 ₽ шт</li>
+          <li><strong>Монтаж простого сместителя на жесткой подводке</strong> — 2500 ₽ шт</li>
+          <li><strong>Монтаж сместителя с терморегулятором</strong> — 3500 ₽ шт</li>
+          <li><strong>Монтаж системы защиты от протечек воды</strong> — 9000 ₽ шт</li>
+          <li><strong>Установка фильтра грубой очистки</strong> — 1200 ₽ шт</li>
+          <li><strong>Установка фильтра тонкой очистки</strong> — 2500 ₽ шт</li>
+          <li><strong>Установка шарового крана</strong> — 1350 ₽ шт</li>
+          <li><strong>Установка редуктора давления</strong> — 1550 ₽ шт</li>
+          <li><strong>Установка шарового крана на стояк</strong> — 1650 ₽ шт</li>        
+          <li><strong>Монтаж душевой штанги</strong> — 2000 ₽ шт</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Карточка 5 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Засоры</div>
+        <div class="price-summary">от 500 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Устранение засоров биде</strong> — от 2000 ₽ шт</li>
+          <li><strong>Устранение засора сложного (тросом)</strong> — от 2500 ₽ шт</li>
+          <li><strong>Устранение засора простого (вантузом)</strong> — 2000 ₽ шт</li>
+          <li><strong>Устранение засора с разбором труб канализации</strong> — 3000 ₽ шт</li>
+          <li><strong>Промывка труб</strong> — от 3500 ₽ шт</li> 
+          <li><strong>Устранение засоров канализации</strong> — от 3200 ₽ шт</li>
+          <li><strong>Устранение засора унитаза</strong> — от 2500 ₽ шт</li>
+          <li><strong>Устранение бытовых засоров</strong> — от 2500 ₽ шт</li>
+          <li><strong>Устранение сложных засоров</strong> — от 5000 ₽ шт</li>
+          <li><strong>Устранение протечки труб</strong> — от 2500 ₽ шт</li>
+          <li><strong>Устранение протечки унитаза</strong> — от 1500 ₽ шт</li>
+          <li><strong>Замена трубы канализации в ванной</strong> — 3000 ₽ шт</li>
+          <li><strong>Замена трубы канализации в туалете</strong> — 3000 ₽ шт</li>
+          <li><strong>Переделка канализационной трубы к унитазу</strong> — 3000 ₽ шт</li>
+          <li><strong>Демонтаж чугунного канализационного отвода</strong> — 2000 ₽ шт</li>
+          <li><strong>Монтаж канализационных труб (полипропиленовых, полиэтиленовых)</strong> — 3000 ₽ шт</li>
+          <li><strong>Устранение течи канализации</strong> — от 1500 ₽ шт</li>
+          <li><strong>Демонтаж труб канализации</strong> — 1000 ₽ м</li>
+          <li><strong>Замена стояка канализации</strong> — 3000 ₽ шт</li>
+          <li><strong>Установка/Замена канализационного тройника</strong> — от 1500 ₽ шт</li>
+          <li><strong>Установка/Замена манжеты</strong> — от 1000 ₽ шт</li>
+          <li><strong>Заглушка на труб</strong> — от 500 ₽ шт</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Карточка 6 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Канализация и Водоснабжение</div>
+        <div class="price-summary">от 400 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Прокладка металлопластиковых труб водоснабжения (за точку)</strong> — 3000 ₽ тч</li>
+          <li><strong>Прокладка полипропиленовых труб водоснабжения (за точку)</strong> — 3000 ₽ тч</li>
+          <li><strong>Монтаж металлопластиковых труб водоснабжения, отопления Ø16-20 мм</strong> — 200 ₽ м.п</li>
+          <li><strong>Монтаж металлопластиковых труб водоснабжения, отопления Ø25-32 мм</strong> — 400 ₽ м.п</li>
+          <li><strong>Монтаж полипропиленовых труб водоснабжения, отопления Ø20-25 мм</strong> — 400 ₽ м.п</li>
+          <li><strong>Монтаж полипропиленовых труб водоснабжения, отопления Ø32 мм</strong> — 550 ₽ м.п</li>
+          <li><strong>Монтаж труб канализации (за точку)</strong> — 2500 ₽ тч</li>
+          <li><strong>Монтаж труб канализации (за метр)</strong> — 500 ₽ м.п</li>
+          <li><strong>Штробление стен под трубы (кирпич)</strong> — 1000 ₽ м.п</li>
+          <li><strong>Штробление стен под трубы (бетон)</strong> — 1500 ₽ м.п</li>
+          <li><strong>Штробление стен под трубы (пеноблок, гипсолит)</strong> — 750 ₽ м.п</li>
+        </ul>
+      </div>
+    </div>
+    <!-- Карточка 7 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Отопление</div>
+        <div class="price-summary">от 1500 ₽</div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Демонтаж батареи отопления</strong> — 1500 ₽ шт</li>
+          <li><strong>Монтаж и подключение радиатора отопления</strong> — 5000 ₽ шт</li>
+          <li><strong>Монтаж полотенцесушителя</strong> — 4500 ₽ шт</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Карточка 8 -->
+    <div class="accordion-card">
+      <div class="accordion-header">
+        <div class="service-name">Бойлеры и стиральные машины</div>
+        <div class="price-summary">от 1500 ₽ </div>
+        <div class="accordion-toggle">↓</div>
+      </div>
+      <div class="accordion-content">
+        <ul>
+          <li><strong>Подключение к водопроводу, канализации, стиральной, посудомоечной машины</strong> — 1500 ₽ шт</li>
+          <li><strong>Монтаж и подключение накопительного водонагревателя (бойлера) емкостью 10-15 л</strong> — 3500 ₽ шт</li>
+          <li><strong>Монтаж и подключение накопительного водонагревателя (бойлера) емкостью 30 л</strong> — 4000 ₽ шт</li>
+          <li><strong>Монтаж и подключение накопительного водонагревателя (бойлера) емкостью 50 л</strong> — 4600 ₽ шт</li>
+          <li><strong>Монтаж и подключение накопительного водонагревателя (бойлера) емкостью 80-100 л</strong> — 5200 ₽ шт</li>
+          <li><strong>Монтаж и подключение накопительного водонагревателя (бойлера) емкостью 120 л</strong> — 5800 ₽ шт</li>
+          <li><strong>Монтаж проточного водонагревателя</strong> — 3500 ₽ шт</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    <!-- Contacts -->
+    <section id="contacts">
+      <h2>Контакты</h2>
+      <div class="contacts">
+        <div class="contact-item">
+          <a href="https://vk.com/as_surgut">ВКонтакте</a>
+        </div>
+        <div class="contact-item">
+          <a href="https://t.me/as_surgut" target="_blank">Telegram</a>
+        </div>
+        <div class="contact-item">
+          <a href="https://wa.me/+79828804678" target="_blank">Whatsapp</a> 
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    &copy; 2025 Евгений Барский. Все права защищены.
+  </footer>
+<script>
+// === АККОРДЕОН: ОТКРЫВАЕТ/ЗАКРЫВАЕТ КАРТОЧКИ ===
+document.addEventListener('DOMContentLoaded', () => {
+  const headers = document.querySelectorAll('.accordion-header');
+
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      const card = header.parentElement;
+      const wasActive = card.classList.contains('active');
+
+      // 1. Закрываем ВСЕ карточки
+      document.querySelectorAll('.accordion-card').forEach(c => {
+        c.classList.remove('active');
+      });
+
+      // 2. Если кликнутая была закрыта — открываем её
+      if (!wasActive) {
+        card.classList.add('active');
+      }
+    });
+  });
+});
+</script>
